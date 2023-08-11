@@ -44,8 +44,9 @@ export const deleteContent = async (req, res, next) => {
             return next(createError(403, "You can delete only your content!"))
         }
     }catch(err){
-        next(err)
+        next(err) 
     }
+    
 }
 export const getContent = async (req, res, next) => {
     try{
