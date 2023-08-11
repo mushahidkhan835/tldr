@@ -2,6 +2,7 @@ import Content from "../models/Content.js"
 import User from "../models/User.js"
 
 export const addContent = async (req, res, next) => {
+    console.log("addcontent")
     const newContent = new Content({
     userId: req.user.id, ...req.body
     })
@@ -85,15 +86,56 @@ export const trend = async (req, res, next) => {
     }
 }
 
+// content im subscribed to
 export const sub = async (req, res, next) => {
-    try{
+    try {
         const user = await User.findById(req.user.id)
+
         const subChannels = user.subscribedUsers
 
-        const list = Promise.all(
+        const list = await Promise.all(
+            subChannels.map(channelId => { 
+                return Content.find({
+                    userId: channelId
+                })
             
+            })
         )
-        res.status(200).json(videos)
+        res.status(200).json(list.flat().sort((a,b) => b.createdAt - a.createdAt))
+    } catch(err){
+        next(err)
+    }
+}
+
+
+export const getByTags = async (req, res, next) => {
+    const tags = req.query.tags.split(",")
+    try {
+        const contents = await Content.find({
+            tags: {$in: tags}
+        }).limit(20)
+        res.status(200).json(contents)
+        
+    } catch(err){
+        next(err)
+    }
+}
+
+export const search = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id)
+
+        const subChannels = user.subscribedUsers
+
+        const list = await Promise.all(
+            subChannels.map(channelId => { 
+                return Content.find({
+                    userId: channelId
+                })
+            
+            })
+        )
+        res.status(200).json(list.flat().sort((a,b) => b.createdAt - a.createdAt))
     } catch(err){
         next(err)
     }

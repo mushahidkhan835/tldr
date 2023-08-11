@@ -13,11 +13,11 @@ const ContentSchema  = new mongoose.Schema({
         type: String,
         requried: true
     },
-    imgUrl: {
+    imageUrl: {
         type: String,
         required: true
     },
-    audioUrl: {
+    contentUrl: {
         type: String,
         required: true
     },

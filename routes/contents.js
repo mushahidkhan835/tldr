@@ -1,5 +1,5 @@
 import express from "express"
-import { addContent, deleteContent, updateContent, getContent, addView, trend, random, sub } from "../controllers/content.js"
+import { addContent, deleteContent, updateContent, getContent, addView, trend, random, sub, getByTags, search } from "../controllers/content.js"
 import { verifyToken
  } from "../verifyToken.js";
 const router = express.Router();
@@ -13,5 +13,7 @@ router.put("/view/:id", verifyToken, addView)
 router.get("/trend", trend)
 router.get("/random", random)
 router.get("/sub", verifyToken, sub)
+router.get("/tags", getByTags)
+router.get("/search", search)
 
 export default router;
