@@ -122,20 +122,13 @@ export const getByTags = async (req, res, next) => {
 }
 
 export const search = async (req, res, next) => {
+    const query = req.query.q
     try {
-        const user = await User.findById(req.user.id)
-
-        const subChannels = user.subscribedUsers
-
-        const list = await Promise.all(
-            subChannels.map(channelId => { 
-                return Content.find({
-                    userId: channelId
-                })
-            
-            })
-        )
-        res.status(200).json(list.flat().sort((a,b) => b.createdAt - a.createdAt))
+        const contents = await Content.find({
+            title: {$regex: query, $options: "i"}
+        }).limit(20)
+        res.status(200).json(contents)
+        
     } catch(err){
         next(err)
     }
